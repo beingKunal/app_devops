@@ -72,7 +72,7 @@ stages {
     steps{
         def containerId = bat(
     returnStdout: true,
-    script: "${docker ps -aqf name=^devops_contain$}"
+    script: "${docker ps -aqf name=^devops_contain$}")
     echo "${containerId}"
           }
           }
