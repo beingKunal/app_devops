@@ -65,14 +65,14 @@ stages {
         steps {
           echo "Docker image step"
           bat 'dotnet publish -c Release'
-          bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f Dockerfile ."
+          bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f DevOps/Dockerfile ."
         }
       }
       stage('Move Image to docker hub'){
         steps{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
-          withDockerRegistry([credentialsId: 'DockerHub', url: "https://hub.docker.com/repository/docker/kunalnagarro/devops"]) {
+          withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
           }
       }
