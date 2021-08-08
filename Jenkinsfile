@@ -80,7 +80,7 @@ stages {
           bat "docker stop c_kunal_master && docker rm c_kunal_master"
         }
       }
-      
+    }
           }
           
       stage('Move Image to docker hub'){
