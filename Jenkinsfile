@@ -88,8 +88,10 @@ stages {
         script{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
+          bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:latest"
           withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
+            bat "docker push ${registry}:latest"
           }
       }
       })
