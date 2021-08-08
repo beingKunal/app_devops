@@ -51,15 +51,32 @@ stages {
           bat "docker build -t i_${username}_develop:${BUIld_NUMBER} --no-cache -f DevOps/Dockerfile ."
         }
       }
-      stage('Move Image to docker hub'){
-        steps{
+      stage('Containers'){
+    steps{
+      parallel(
+        'PreContainer Check':{
+      script{
+        def containerId = "${bat(returnStdout: true,script:'docker ps -aqf name=^c_kunal_develop$').trim().readLines().drop(1)}"
+        //println("Hello " + containerId)
+    //echo "${containerId}"
+        if(containerId !='[]'){
+           echo "${containerId}"
+          echo "Deleting container if already running"
+          bat "docker stop c_kunal_develop && docker rm c_kunal_develop"
+        }
+      }
+        },
+        'Push to Docker Hub':{
+        script{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_develop:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
           withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
           }
       }
-      }
+      })
+    }
+          }
         stage("Docker Deploymnet") {
         steps {
 		
