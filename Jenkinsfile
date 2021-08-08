@@ -7,15 +7,16 @@ pipeline {
     properties = null
     docker_port = null
     username = 'kunal'
+    cname = "c_${username}_master"
   }
-//   options {
-//     timestamp()
-//     timeout(time: 1, unit: 'HOURS')
-//     skipDefaultCheckout()
-//     buildDiscarder(logRotator(
-//         numToKeepStr: '3',
-//       daysToKeepStr: '10'))
-// }
+  options {
+    timestamps()
+    timeout(time: 1, unit: 'HOURS')
+    skipDefaultCheckout()
+    buildDiscarder(logRotator(
+        numToKeepStr: '3',
+      daysToKeepStr: '10'))
+}
 stages {
   stage('Start') {
     steps {
@@ -65,17 +66,49 @@ stages {
         steps {
           echo "Docker image step"
           bat 'dotnet publish -c Release'
-          bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f Dockerfile ."
+          bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f DevOps/Dockerfile ."
         }
       }
-      stage('Move Image to docker hub'){
-        steps{
+  stage('Containers'){
+    steps{
+      parallel(
+        'PreContainer Check':{
+      script{
+        def containerId = "${bat(returnStdout: true,script:'docker ps -aqf name=^c_kunal_master$').trim().readLines().drop(1)}"
+        println("Hello " + containerId)
+    //echo "${containerId}"
+        if(containerId !='[]'){
+           echo "${containerId}"
+          echo "Deleting container if already running"
+          bat "docker stop ${cname} && docker rm ${cname}"
+        }
+      }
+        },
+        'Push to Docker Hub':{
+        script{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
-          withDockerRegistry([credentialsId: 'DockerHub', url: "https://hub.docker.com/repository/docker/kunalnagarro/devops"]) {
+          bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:master"
+          withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
+            bat "docker push ${registry}:master"
           }
       }
+      })
+    }
+          }
+    
+ stage("Docker Deploymnet") {
+        steps {		
+          echo "Docker Deployment"
+          bat "docker run --name ${cname} -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
+        }
       }
+  stage('Kubernetes Deployment'){
+    steps {
+    echo "Deploying to kubernetes cluster"
+    bat "kubectl apply -f deployment.yaml"
+    }
+  }
 }
 }
