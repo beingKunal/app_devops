@@ -84,7 +84,7 @@ stages {
       }
         },
         'Push to Docker Hub':{
-        steps{
+        script{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
           withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
