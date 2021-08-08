@@ -80,7 +80,7 @@ stages {
         steps{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
-          withDockerRegistry([credentialsId: 'DockerHub', url: '']) {
+          withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
           }
       }
