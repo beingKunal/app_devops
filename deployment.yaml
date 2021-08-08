@@ -1,21 +1,21 @@
 apiVersion : apps/v1
 kind:Deployment
 metadata:
-    name:dotnet-app-deployment
+    name:devops-app-deployment
     labels:
-        app: dotnet-app
+        app: devops-app
 spec:
     replicas: 3
     selector :
         matchLabels:
-            app:dotnet-app
+            app:devops-app
     template:
         metadata:
             labels:
-                app: dotnet-app
+                app: devops-app
 spec:
     containers:
-        -name: dotnet-app
+        -name: devops-app
         image:kunal@nagarro/devops:latest
         ports:
             -name:http
@@ -25,13 +25,13 @@ spec:
 apiVersion:v1
 kind:Service
 metadata:
-    name:dotnet-app
+    name:devops-app
 spec:
     type:NodePort
     selector:
-        app:dotnet-app
+        app:devops-app
     ports:
         -protocol : TCP
-        nodePort:30158
+        nodePort:30157
         port:80
         targetport:80
