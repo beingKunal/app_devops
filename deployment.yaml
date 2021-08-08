@@ -17,7 +17,7 @@ spec:
 spec:
     containers:
       - name: devops-app
-        image: kunalnagarro/devops:latest
+        image: kunalnagarro/devops:develop
         ports:
           - name: http
             containerPort : 80
