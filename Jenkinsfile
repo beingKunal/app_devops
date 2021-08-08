@@ -68,22 +68,22 @@ stages {
           bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f DevOps/Dockerfile ."
         }
       }
-  stage('Pre container check'){
+  stage('Containers'){
     steps{
+      parallel(
+        'PreContainer Check':{
       script{
         def containerId = "${bat(returnStdout: true,script:'docker ps -aqf name=^c_kunal_master$').trim().readLines().drop(1)}"
         println("Hello " + containerId)
     //echo "${containerId}"
-        if(containerId !=null){
+        if(containerId !='[]'){
            echo "${containerId}"
           echo "Deleting container if already running"
           bat "docker stop c_kunal_master && docker rm c_kunal_master"
         }
       }
-    }
-          }
-          
-      stage('Move Image to docker hub'){
+        },
+        'Push to Docker Hub':{
         steps{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
@@ -91,7 +91,10 @@ stages {
             bat "docker push ${registry}:${BUILD_NUMBER}"
           }
       }
-      }
+      })
+    }
+          }
+    
  stage("Docker Deploymnet") {
         steps {		
           echo "Docker Deployment"
