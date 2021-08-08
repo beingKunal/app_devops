@@ -71,8 +71,8 @@ stages {
   stage('Pre container check'){
     steps{
       script{
-        def containerId = "${bat(returnStdout: true,script:'docker ps -aqf name=^c_kunal_master$')}"
-        println("Hello" + containerId)
+        def containerId = "${bat(returnStdout: true,script:'docker ps -aqf name=^c_kunal_master$').trim()}"
+        println("Hello " + containerId)
     echo "${containerId}"
       }
           }
