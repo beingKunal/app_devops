@@ -85,5 +85,11 @@ stages {
           bat "docker run --name ${cname} -d -p 7300:80 ${registry}:${BUILD_NUMBER}"
         }
       }
+	stage('Kubernetes Deployment'){
+    steps {
+    echo "Deploying to kubernetes cluster"
+    bat "kubectl apply -f deployment.yaml"
+    }
+  }
 }
 }
