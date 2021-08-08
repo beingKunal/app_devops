@@ -86,5 +86,11 @@ stages {
           }
       }
       }
+ stage("Docker Deploymnet") {
+        steps {		
+          echo "Docker Deployment"
+          bat "docker run --name c_${username}_master -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
+        }
+      }
 }
 }
