@@ -6,7 +6,8 @@ pipeline {
     registry = 'kunalnagarro/devops'
     properties = null
     docker_port = null
-    username = 'kunal'
+    username = 'kunal'	
+	  cname = "c_${username}_develop"
   }
   options {
     timestamps()
@@ -62,7 +63,7 @@ stages {
         if(containerId !='[]'){
            echo "${containerId}"
           echo "Deleting container if already running"
-          bat "docker stop c_kunal_develop && docker rm c_kunal_develop"
+		bat "docker stop ${cname} && docker rm ${cname}"
         }
       }
         },
@@ -81,7 +82,7 @@ stages {
         steps {
 		
           echo "Docker Deployment"
-          bat "docker run --name c_${username}_develop -d -p 7300:80 ${registry}:${BUILD_NUMBER}"
+          bat "docker run --name ${cname} -d -p 7300:80 ${registry}:${BUILD_NUMBER}"
         }
       }
 }
