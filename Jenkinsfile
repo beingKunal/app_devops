@@ -34,15 +34,6 @@ stages {
           bat "dotnet restore"
         }
       }
-      stage('Start SonarQube Analysis') {
-        steps {
-          echo "Start sonarQube Analysis Step"
-          withSonarQubeEnv('Test_Sonar') {
-            bat "${scannerHome}\\SonarScanner.MSBuild.exe begin /k:sonar_Kunal /n:sonar_Kunal /v:1.0"
-
-          }
-        }
-      }
       stage('Code Build') {
         steps {
           echo "Clean Previous Build"
@@ -53,29 +44,28 @@ stages {
           bat 'dotnet build -c Release -o "DevOps_Assignment/app/build"'
         }
       }
-      stage("Stop sonarQube Analysis") {
-        steps {
-          echo "Stop sonarQube analysis"
-          withSonarQubeEnv('Test_Sonar') {
-            bat "${scannerHome}\\SonarScanner.MSBuild.exe end"
-          }
-        }
-      }
       stage('Docker Image') {
         steps {
           echo "Docker image step"
           bat 'dotnet publish -c Release'
-          bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f Dockerfile ."
+          bat "docker build -t i_${username}_develop:${BUIld_NUMBER} --no-cache -f Dockerfile ."
         }
       }
       stage('Move Image to docker hub'){
         steps{
          echo "Move Image to Docker Hub"
-          bat "docker tag i_${username}_master:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
+          bat "docker tag i_${username}_develop:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
           withDockerRegistry([credentialsId: 'DockerHub', url: "https://hub.docker.com/repository/docker/kunalnagarro/devops"]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
           }
       }
+      }
+        stage("Docker Deploymnet") {
+        steps {
+		
+          echo "Docker Deployment"
+          bat "docker run --name c_${username}_develop -d -p 7300:80 ${registry}:${BUILD_NUMBER}"
+        }
       }
 }
 }
