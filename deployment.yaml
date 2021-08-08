@@ -9,7 +9,7 @@ spec:
     replicas: 4
     selector :
         matchLabels:
-            app:devops-app
+            app: devops-app
     template:
         metadata:
             labels:
@@ -17,7 +17,7 @@ spec:
 spec:
     containers:
       - name: devops-app
-        image:kunalnagarro/devops:latest
+        image: kunalnagarro/devops:latest
         ports:
           - name: http
             containerPort : 80
@@ -29,11 +29,11 @@ metadata:
     name: devops-app
     namespace: kubernetes-cluster-kunal
 spec:
-    type:NodePort
+    type: NodePort
     selector:
-        app:devops-app
+        app: devops-app
     ports:
-      - protocol : TCP
-        nodePort:30158
-        port:80
-        targetport:80
+      - protocol: TCP
+        nodePort: 30158
+        port: 80
+        targetport: 80
