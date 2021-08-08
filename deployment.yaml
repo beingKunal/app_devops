@@ -34,7 +34,7 @@ spec:
 apiVersion: "v1"
 kind: "Service"
 metadata:
-  name: devops-deployment-service
+  name: devops-deployment-service-develop
   namespace: kubernetes-cluster-kunal
   labels:
     app: devops-develop
