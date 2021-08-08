@@ -1,11 +1,12 @@
 apiVersion : apps/v1
-kind:Deployment
+kind: Deployment
 metadata:
-    name:devops-app-deployment
+    name: devops-app-deployment
+    namespace: kubernetes-cluster-kunal
     labels:
         app: devops-app
 spec:
-    replicas: 3
+    replicas: 4
     selector :
         matchLabels:
             app:devops-app
@@ -15,23 +16,24 @@ spec:
                 app: devops-app
 spec:
     containers:
-        -name: devops-app
-        image:kunal@nagarro/devops:latest
+      - name: devops-app
+        image: kunalnagarro/devops:latest
         ports:
-            -name:http
+          - name: http
             containerPort : 80
             protocol : TCP
 ---
-apiVersion:v1
-kind:Service
+apiVersion: v1
+kind: Service
 metadata:
-    name:devops-app
+    name: devops-app
+    namespace: kubernetes-cluster-kunal
 spec:
-    type:NodePort
+    type: NodePort
     selector:
-        app:devops-app
+        app: devops-app
     ports:
-        -protocol : TCP
-        nodePort:30157
-        port:80
-        targetport:80
+      - protocol : TCP
+        nodePort: 30158
+        port: 80
+        targetport: 80
