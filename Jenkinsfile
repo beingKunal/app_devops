@@ -8,14 +8,14 @@ pipeline {
     docker_port = null
     username = 'kunal'
   }
-//   options {
-//     timestamp()
-//     timeout(time: 1, unit: 'HOURS')
-//     skipDefaultCheckout()
-//     buildDiscarder(logRotator(
-//         numToKeepStr: '3',
-//       daysToKeepStr: '10'))
-// }
+  options {
+    timestamps()
+    timeout(time: 1, unit: 'HOURS')
+    skipDefaultCheckout()
+    buildDiscarder(logRotator(
+        numToKeepStr: '3',
+      daysToKeepStr: '10'))
+}
 stages {
   stage('Start') {
     steps {
