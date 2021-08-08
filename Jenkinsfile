@@ -55,7 +55,7 @@ stages {
         steps{
          echo "Move Image to Docker Hub"
           bat "docker tag i_${username}_develop:${BUIld_NUMBER} ${registry}:${BUILd_NUMBER}"
-          withDockerRegistry([credentialsId: 'DockerHub', url: "https://hub.docker.com/repository/docker/kunalnagarro/devops"]) {
+          withDockerRegistry([credentialsId: 'DockerHub', url: ""]) {
             bat "docker push ${registry}:${BUILD_NUMBER}"
           }
       }
