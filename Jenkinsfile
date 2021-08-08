@@ -80,7 +80,7 @@ stages {
         if(containerId !='[]'){
            echo "${containerId}"
           echo "Deleting container if already running"
-          bat "docker stop env.cname && docker rm env.cname"
+          bat "docker stop ${cname} && docker rm ${cname}"
         }
       }
         },
@@ -99,7 +99,7 @@ stages {
  stage("Docker Deploymnet") {
         steps {		
           echo "Docker Deployment"
-          bat "docker run --name env.cname -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
+          bat "docker run --name ${cname} -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
         }
       }
 }
