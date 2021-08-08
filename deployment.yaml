@@ -1,39 +1,52 @@
-apiVersion : apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: devops-app-deployment
-    namespace: kubernetes-cluster-kunal
-    labels:
-        app: devops-app
+  name: devops-develop-deployment
+  namespace: kubernetes-cluster-kunal
+  labels:
+    app: devops-develop
 spec:
-    replicas: 4
-    selector :
-        matchLabels:
-            app: devops-app
-    template:
-        metadata:
-            labels:
-                app: devops-app
-spec:
-    containers:
-      - name: devops-app
+  replicas: 4
+  selector:
+    matchLabels:
+      app: devops-develop
+  template:
+    metadata:
+      labels:
+        app: devops-develop
+    spec:
+      containers:
+      - name: devops-develop
         image: kunalnagarro/devops:develop
         ports:
           - name: http
-            containerPort : 80
-            protocol : TCP
+            containerPort: 80
+            protocol: TCP
+        resources:
+          requests:
+            memory: "250Mi"
+            cpu: "250m"
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+
 ---
-apiVersion: v1
-kind: Service
+apiVersion: "v1"
+kind: "Service"
 metadata:
-    name: devops-app
-    namespace: kubernetes-cluster-kunal
+  name: devops-deployment-service
+  namespace: kubernetes-cluster-kunal
+  labels:
+    app: devops-develop
 spec:
-    type: NodePort
-    selector:
-        app: devops-app
-    ports:
-      - protocol: TCP
-        nodePort: 30158
-        port: 80
-        targetport: 80
+  type: NodePort
+  selector: 
+    app: devops-develop
+  ports: 
+  - protocol: "TCP"
+    nodePort: 30158
+    port: 80
+    targetPort: 80
+  selector: 
+    app: devops-develop
+  type: "LoadBalancer"
