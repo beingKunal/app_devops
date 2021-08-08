@@ -9,7 +9,7 @@ pipeline {
     username = 'kunal'
   }
   options {
-    timestamp()
+    timestamps()
     timeout(time: 1, unit: 'HOURS')
     skipDefaultCheckout()
     buildDiscarder(logRotator(
@@ -68,14 +68,16 @@ stages {
           bat "docker build -t i_${username}_master:${BUIld_NUMBER} --no-cache -f DevOps/Dockerfile ."
         }
       }
-//   stage('Pre container check'){
-//     steps{
-//         def containerId = bat(
-//     returnStdout: true,
-//     script: "${docker ps -aqf name=^devops_contain$}")
-//     echo "${containerId}"
-//           }
-//           }
+  stage('Pre container check'){
+    steps{
+      script{
+        def containerId = bat(
+    returnStdout: true,
+    script: "${docker ps -aqf name=^devops_contain$}")
+    echo "${containerId}"
+      }
+          }
+          }
       stage('Move Image to docker hub'){
         steps{
          echo "Move Image to Docker Hub"
