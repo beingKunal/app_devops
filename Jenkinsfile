@@ -7,6 +7,7 @@ pipeline {
     properties = null
     docker_port = null
     username = 'kunal'
+    cname = "c_${username}_master"
   }
   options {
     timestamps()
@@ -79,7 +80,7 @@ stages {
         if(containerId !='[]'){
            echo "${containerId}"
           echo "Deleting container if already running"
-          bat "docker stop c_kunal_master && docker rm c_kunal_master"
+          bat "docker stop env.cname && docker rm env.cname"
         }
       }
         },
@@ -98,7 +99,7 @@ stages {
  stage("Docker Deploymnet") {
         steps {		
           echo "Docker Deployment"
-          bat "docker run --name c_${username}_master -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
+          bat "docker run --name env.cname -d -p 7200:80 ${registry}:${BUILD_NUMBER}"
         }
       }
 }
