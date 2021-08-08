@@ -73,7 +73,17 @@ stages {
       script{
         def containerId = "${bat(returnStdout: true,script:'docker ps -aqf name=^c_kunal_master$').trim().readLines().drop(1)}"
         println("Hello " + containerId)
-    echo "${containerId}"
+    //echo "${containerId}"
+      }
+      when{
+        expression{
+        return containerId != null
+        }
+        steps{
+          echo "${containerId}"
+          echo "Deleting container if already running"
+          bat "docker stop c_kunal_master && docker rm c_kunal_master"
+        }
       }
           }
           }
