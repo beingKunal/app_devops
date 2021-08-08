@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devops-deployment
-  namespace: namespace: kubernetes-cluster-kunal
+  namespace: kubernetes-cluster-kunal
   labels:
     app: devops
 spec:
